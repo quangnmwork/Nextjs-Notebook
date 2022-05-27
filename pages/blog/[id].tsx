@@ -1,9 +1,12 @@
 import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import React from "react";
-import { getPost } from "../../services/post";
 
-const DynamicImports = dynamic(() => import("./../../components/button"));
+import NestedLayout from "./../../components/layout/NestedLayout";
+import { getPost } from "../../services/post";
+import Layout from "../../components/layout/Layout";
+
+const DynamicImports = dynamic(() => import("./../../components/Button"));
 
 const BlogPage = () => {
   return (
@@ -22,6 +25,7 @@ export async function getStaticProps(context: GetStaticProps) {
     },
   };
 }
+
 export async function getStaticPaths() {
   const posts = getPost();
   const slugs = posts.map((post) => post.id);
@@ -31,5 +35,13 @@ export async function getStaticPaths() {
     fallback: true,
   };
 }
+
+BlogPage.getLayout = function getLayout(page: React.ReactNode) {
+  return (
+    <Layout>
+      <NestedLayout>{page}</NestedLayout>
+    </Layout>
+  );
+};
 
 export default BlogPage;
